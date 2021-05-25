@@ -152,10 +152,15 @@ tr {
 
 #lblBlockcount {
 	margin-right: 10px;
+	vertical-align: middle;
 }
 
+#lblMasternodecount {
+	margin-right: 10px;
+	vertical-align: middle;
+}
 #market_menu {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 
 .label a:link {

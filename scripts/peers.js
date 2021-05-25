@@ -5,6 +5,14 @@ var mongoose = require('mongoose')
   , request = require('request');
 
 var COUNT = 5000; //number of blocks to index
+if ( settings.https_site === "true" ) {
+ base_uri = 	'https://' + settings.site_url;
+}
+else {
+ base_uri = 	'http://' + settings.site_url;	
+}
+
+
 
 function exit() {
   mongoose.disconnect();
@@ -23,17 +31,24 @@ mongoose.connect(dbString, function(err) {
     console.log('Aborting');
     exit();
   } else {
-    request({uri: 'http://127.0.0.1:' + settings.port + '/api/getpeerinfo', json: true}, function (error, response, body) {
-      lib.syncLoop(body.length, function (loop) {
+    request({uri: base_uri + '/api/getpeerinfo', json: true}, function (error, response, body) {    
+	lib.syncLoop(body.length, function (loop) {
         var i = loop.iteration();
-        var portSplit = body[i].addr.lastIndexOf(":");
-        var port = "";
-        if (portSplit < 0) {
-          portSplit = body[i].addr.length;
-        } else {
-          port = body[i].addr.substring(portSplit+1);
+        if (body[i].addr.indexOf("]") > -1) {
+              var temp_address = body[i].addr.split(']')[0]
+              var address = temp_address.replace('[', '')
+              var temp_port = body[i].addr.split(']')[1]
+              var port = temp_port.replace(':', '')
+//console.log ('PORTv6 =' + port)
+//console.log ('ADDRv6 =' + address)
         }
-        var address = body[i].addr.substring(0,portSplit);
+        else {
+	var address = body[i].addr.split(':')[0];
+	var port = body[i].addr.split(':')[1];
+//console.log ('PORTv4 =' + port)
+//console.log ('ADDRv4 =' + address)
+
+	}
         db.find_peer(address, function(peer) {
           if (peer) {
             if (isNaN(peer['port']) || peer['port'].length < 2 || peer['country'].length < 1 || peer['country_code'].length < 1) {

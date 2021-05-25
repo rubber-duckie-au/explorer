@@ -16,7 +16,7 @@ var dbString = 'mongodb://' + settings.dbsettings.user;
 dbString = dbString + ':' + settings.dbsettings.password;
 dbString = dbString + '@' + settings.dbsettings.address;
 dbString = dbString + ':' + settings.dbsettings.port;
-dbString = dbString + "/IQUIDUS-BENCHMARK";
+dbString = dbString + "/DIGIQUIDUS-BENCHMARK";
 
 mongoose.connect(dbString, function(err) {
   if (err) {

@@ -203,6 +203,15 @@ router.get('/network', function(req, res) {
   res.render('network', {active: 'network'});
 });
 
+router.get('/masternodes', function(req, res) {
+  res.render('masternodes', {active: 'masternodes'});
+});
+
+router.get('/mempool', function(req, res) {
+  res.render('mempool', { active: 'mempool'});
+});
+
+
 router.get('/reward', function(req, res){
   //db.get_stats(settings.coin, function (stats) {
     console.log(stats);
@@ -245,7 +254,7 @@ router.get('/address/:hash/:count', function(req, res) {
 });
 
 router.post('/search', function(req, res) {
-  var query = req.body.search;
+  var query = req.body.search.trim();
   if (query.length == 64) {
     if (query == settings.genesis_tx) {
       res.redirect('/block/' + settings.genesis_block);
@@ -294,36 +303,46 @@ router.get('/qr/:string', function(req, res) {
   }
 });
 
+router.get('/ext/masternodes', function(req, res) {
+  lib.get_masternodelist(function(masternodelist) {
+              res.send({data: masternodelist});
+  });
+  });
+
+router.get('/ext/mempooltx', function(req, res) {
+  lib.get_mempooltx(function(mempooltx) {
+              res.send({data: mempooltx});
+  });
+  });
+
 router.get('/ext/summary', function(req, res) {
   lib.get_difficulty(function(difficulty) {
     difficultyHybrid = ''
-    if (difficulty['proof-of-work']) {
-      if (settings.index.difficulty == 'Hybrid') {
-        difficultyHybrid = 'POS: ' + difficulty['proof-of-stake'];
-        difficulty = 'POW: ' + difficulty['proof-of-work'];
-      } else if (settings.index.difficulty == 'POW') {
-        difficulty = difficulty['proof-of-work'];
-      } else {
-        difficulty = difficulty['proof-of-stake'];
-      }
-    }
+    difficultyHybrid = (difficulty['proof-of-stake']);
+    difficulty = (difficulty['proof-of-work']);
     lib.get_hashrate(function(hashrate) {
       lib.get_connectioncount(function(connections){
         lib.get_blockcount(function(blockcount) {
-          db.get_stats(settings.coin, function (stats) {
-            if (hashrate == 'There was an error. Check your console.') {
-              hashrate = 0;
-            }
-            res.send({ data: [{
-              difficulty: difficulty,
-              difficultyHybrid: difficultyHybrid,
-              supply: stats.supply,
-              hashrate: hashrate,
-              lastPrice: stats.last_price,
-              connections: connections,
-              blockcount: blockcount
+          lib.get_masternodecount(function(masternodecount){
+            lib.get_mempoolcount(function(mempoolcount) {
+	    db.get_stats(settings.coin, function (stats) {
+              if (hashrate == 'There was an error. Check your console.') {
+                hashrate = 0;
+              }
+              res.send({ data: [{
+                difficulty: difficulty,
+                difficultyHybrid: difficultyHybrid,
+                supply: stats.supply,
+                hashrate: hashrate,
+                lastPrice: stats.last_price,
+                connections: connections,
+                blockcount: blockcount,
+                masternodecount: masternodecount,
+                mempoolcount: mempoolcount
             }]});
+           });
           });
+         });
         });
       });
     });

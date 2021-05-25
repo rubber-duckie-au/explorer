@@ -19,16 +19,18 @@ script.
           flagBlock = '&nbsp;<div class="flag-icon flag-icon-'+data['country_code'].toLowerCase()+'"></div>';
         }
         $("td:eq(0)", row).html(data['address']);
-        $("td:eq(1)", row).html(data['protocol']);
-        $("td:eq(2)", row).html(data['version']);
-        $("td:eq(3)", row).html(data['country']+flagBlock);
+        $("td:eq(1)", row).html(data['port']);
+        $("td:eq(2)", row).html(data['protocol']);
+        $("td:eq(3)", row).html(data['version']);
+        $("td:eq(4)", row).html(data['country']+flagBlock);
 
       },
       columns: [
-        { data: 'address', width: '25%' },
-        { data: 'protocol', width: '25%' },
-        { data: 'version', width:'25%' },
-        { data: 'country', width: '25%'}
+        { data: 'address', width: '20%' },
+        { data: 'port', width: '20%' },
+        { data: 'protocol', width: '20%' },
+        { data: 'version', width:'20%' },
+        { data: 'country', width: '20%'}
       ]
     });
   });
@@ -37,6 +39,7 @@ script.
     thead
       tr
         th.text-center #{settings.locale.net_address}
+        th.text-center #{settings.locale.net_port}
         th.text-center #{settings.locale.net_protocol}
         th.text-center #{settings.locale.net_subversion}
         th.text-center #{settings.locale.net_country}

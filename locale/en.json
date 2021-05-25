@@ -13,6 +13,8 @@
     "menu_movement": "Movement",
     "menu_node": "Nodes",
     "menu_network": "Network",
+    "menu_masternodes": "Masternodes",
+    "menu_mempool": "Mempool",
 
     // explorer view
     "ex_title": "Block Explorer",
@@ -79,6 +81,7 @@
     "net_addnodes": "Add Nodes",
     "net_connections": "Connections",
     "net_address": "Address",
+    "net_port": "Port",
     "net_protocol": "Protocol",
     "net_subversion": "Sub-version",
     "net_country": "Country",
@@ -129,7 +132,8 @@
     // Markets
     "fides": "Fides-ex",
     "poloniex": "Poloniex",
-    "bittrex": "Bittrex",
+    "bittrex": "Bittrex BTC",
+    "bittrex2": "Bittrex USDT",
     "altmarkets": "AltMarkets",
     "bleutrade": "Bleutrade",
     "yobit": "Yobit",
@@ -138,6 +142,8 @@
     "ccex": "C-Cex",
     "crex": "Crex24",
     "tradesatoshi": "TradeSatoshi",
+    "hitbtc": "HitBTC",
+    "whitebit": "WhiteBIT USDT",
 
     // Heavy rewards view
     "heavy_title": "Reward/voting information",

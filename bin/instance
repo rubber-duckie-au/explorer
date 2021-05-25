@@ -55,8 +55,42 @@ db.connect(dbString, function() {
       }
     }); 
   }
+  if ( settings.https_site == true ) {
+console.log('in HTTPS loop');
+    var fs = require('fs');
+    var certRoot = '/etc/letsencrypt/live/' + settings.site_url + '/';
+
+    var options = {
+      ca: fs.readFileSync(certRoot + 'chain.pem'),
+      cert: fs.readFileSync(certRoot + 'cert.pem'),
+      key: fs.readFileSync(certRoot + 'privkey.pem'),
+    };
+
+    var http = require('http')
+    var https = require('https')
+ 
+    http.createServer(function(req, res) {
+	if (req.url.indexOf('/.well-known/acme-challenge/') >= 0) {
+	    console.log(req.url)
+	    //res.send();
+	    res.writeHead(200); 
+            var contents = fs.readFileSync('./public' + req.url)
+	    res.end(contents);
+ 
+	} else {
+	    res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
+            console.log('redirected')
+            res.end();
+
+}
+    }).listen(80);
+ 
+    https.createServer(options, app).listen(443); 
+  
+} else {
 
   var server = app.listen(app.get('port'), '::', function() {
     debug('Express server listening on port ' + server.address().port);
   });
+  }
 });

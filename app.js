@@ -19,7 +19,7 @@ var app = express();
 bitcoinapi.setWalletDetails(settings.wallet);
 if (settings.heavy != true) {
   bitcoinapi.setAccess('only', ['getinfo', 'getnetworkhashps', 'getmininginfo', 'getdifficulty', 'getconnectioncount',
-    'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction', 'getpeerinfo', 'gettxoutsetinfo', 'verifymessage']);
+    'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction', 'getpeerinfo', 'gettxoutsetinfo', 'verifymessage', 'getrawmempool', 'masternodelist']);
 } else {
   // enable additional heavy api calls
   /*
@@ -36,7 +36,7 @@ if (settings.heavy != true) {
   bitcoinapi.setAccess('only', ['getinfo', 'getstakinginfo', 'getnetworkhashps', 'getdifficulty', 'getconnectioncount',
     'getblockcount', 'getblockhash', 'getblock', 'getrawtransaction', 'getmaxmoney', 'getvote',
     'getmaxvote', 'getphase', 'getreward', 'getnextrewardestimate', 'getnextrewardwhenstr',
-    'getnextrewardwhensec', 'getsupply', 'gettxoutsetinfo', 'verifymessage']);
+    'getnextrewardwhensec', 'getsupply', 'gettxoutsetinfo', 'verifymessage', 'getrawmempool', 'masternodelist']);
 }
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -145,7 +145,7 @@ app.use('/ext/gettx/:txid', function(req, res) {
             });
           });
         } else {
-          res.send({ error: 'tx not found.', hash: txid});
+          res.send({ error: 'tx not found APP.', hash: txid});
         }
       });
     }

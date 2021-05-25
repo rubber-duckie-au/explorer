@@ -30,10 +30,14 @@ html
           $.ajax({url: '/ext/summary', success: function(json){
             var supplyString = json.data[0].supply;
             var diffString = json.data[0].difficulty;
+            var diffStringHybrid = json.data[0].difficultyHybrid;
             var hashrateString = json.data[0].hashrate;
             if (!isNaN(json.data[0].difficulty)) {
-              diffString = parseFloat(json.data[0].difficulty).toFixed(2);
+              diffString = "PoW: " + parseFloat(json.data[0].difficulty).toFixed(0);
             }
+            if (!isNaN(json.data[0].difficultyHybrid)) {
+              diffStringHybrid = "PoS: " + parseFloat(json.data[0].difficultyHybrid).toFixed(0);
+            } 
             if (!isNaN(json.data[0].supply)) {
               supplyString = parseInt(parseFloat(json.data[0].supply).toFixed(0)).toLocaleString('en');
             }
@@ -42,10 +46,11 @@ html
             }
             $("#supply").text(supplyString);
             $("#difficulty").text(diffString);
-            $("#difficultyHybrid").text(json.data[0].difficultyHybrid);
+            $("#difficultyHybrid").text(diffStringHybrid);
             $("#hashrate").text(hashrateString);
             $("#lastPrice").text(parseFloat(json.data[0].lastPrice).toFixed(8) + ' #{settings.markets.exchange}'.toUpperCase());
             $("#marketCap").text((parseFloat(json.data[0].lastPrice).toFixed(8) * parseInt(parseFloat(json.data[0].supply).toFixed(0))).toLocaleString('en') + ' #{settings.markets.exchange}'.toUpperCase());
+            $("#lblMasternodecount").text(json.data[0].masternodecount + ' mastenodes');
             $("#lblConnections").text(json.data[0].connections + ' connections');
             $("#lblBlockcount").text(json.data[0].blockcount + ' blocks');
             $("#lblX1").text(' ');
@@ -147,6 +152,16 @@ html
               a.nav-link(href='/network')
                 span.fa.fa-share-alt
                 span.menu-text #{settings.locale.menu_network}
+          if settings.display.masternodes == true
+            li#network
+              a.nav-link(href='/masternodes')
+                span.fa.fa-tasks
+                span.menu-text #{settings.locale.menu_masternodes}
+          if settings.display.mempool == true
+            li#network
+              a.nav-link(href='/mempool')
+                span.fa.fa-cloud
+                span.menu-text #{settings.locale.menu_mempool}
           if settings.display.richlist == true
             li#richlist
               a.nav-link(href='/richlist')
@@ -198,6 +213,7 @@ html
                 if settings.index.difficulty == 'Hybrid'
                   label#difficulty -
                   <br>
+                  span.header-icons.fa.fa-sliders
                   label#difficultyHybrid -
                 else
                   label#difficulty -
@@ -275,5 +291,6 @@ html
               a.nav-link.poweredby(href='https://github.com/iquidus/explorer', target='_blank') Powered by Iquidus Explorer v#{settings.iquidus_version}
       .col-md-4.navbar-nav
         ui.nav.justify-content-end
+          label#lblMasternodecount.badge.badge-pill.nav-link
           label#lblBlockcount.badge.badge-pill.nav-link
           label#lblConnections.badge.badge-pill.nav-link

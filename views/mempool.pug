@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  script.
+    $(document).ready(function(){ 
+      var ptable = $('#mempool-table').dataTable( {  
+        autoWidth: true,      
+        searching: false,
+        ordering: false,
+        responsive: true,
+        lengthChange: true,
+        processing: true,
+        language: {emptyTable: "There are currently no transactions in mempool."
+                   },
+                ajax: {
+          url: '/ext/mempooltx',
+          dataSrc: function ( json ) {
+           if (json.data[0]['tx_id'] == "") {
+            var obj = ""; 
+            return obj;
+           }          
+          return json.data;
+         }
+        },
+        columns: [
+         { data: 'tx_id', width: '100%' }
+         ]
+    });
+      setInterval( function () {
+        ptable.api().ajax.reload(null, false);
+      }, 20000 );
+    });
+  
+  .col-md-12(style="margin-bottom: 4%")
+    .row.text-center(style='margin-bottom:15px;')
+ 
+    .panel.panel-default
+      .panel-heading
+        strong #{settings.locale.menu_mempool}
+      table#mempool-table.table.table-bordered.table-striped
+        thead
+          tr
+            th.text-center Hash
+        tbody.text-center
+      
+              
